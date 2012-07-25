@@ -1,28 +1,90 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/latitude"
         android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/longitude"
         android:layout_width="170dp"
         android:layout_height="wrap_content" 
         />
     <TextView
-        android:id="@+id/helloboy"
+        android:id="@+id/hello"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         />
-    <Button
-        android:id="@+id/hellotest"
-        android:layout_width="100dp"
+    <TextView
+        android:id="@+id/textLength"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-    	/>
+        />
+ 	
+    <Button
+        android:id="@+id/n1"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="1" />
+
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RadioButton" />
+
+    <Button
+        android:id="@+id/n2"
+        android:layout_width="100dp"
+        android:text="2"
+        android:layout_height="40dp" />
+    <Button
+        android:id="@+id/n3"
+        android:text="3"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+    
+
+    <Button
+        android:text="4"
+        android:id="@+id/n4"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+    <Button
+        android:text="5"
+        android:id="@+id/n5"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+    <Button
+        android:text="6"
+        android:id="@+id/n6"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+    <Button
+        android:text="7"
+        android:id="@+id/n7"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+    <Button
+        android:text="8"
+        android:id="@+id/n8"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
+
+   
+    <Button
+        android:text="9"
+        android:id="@+id/n9"
+        android:layout_width="100dp"
+        android:layout_height="40dp" />
 
 </LinearLayout>
