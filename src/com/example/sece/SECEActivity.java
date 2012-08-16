@@ -33,7 +33,6 @@ public class SECEActivity extends Activity implements OnClickListener {
     	usernameText = (EditText) findViewById(R.id.usernameText);
     	passwordText = (EditText) findViewById(R.id.passwordText);
     	credentials = getSharedPreferences("creds.txt", 0);
-    	SharedPreferences.Editor credentialsEditor = credentials.edit();
     	credentialManager = new CredentialManager(getSharedPreferences("creds.txt",0));
 	}
 
@@ -91,10 +90,7 @@ public class SECEActivity extends Activity implements OnClickListener {
     @Override
 	public void onClick(View v) {
     	if (v == login) {
-			/*LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-	        LocationListener locListener = new MyLocationListener();
-	        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);      
-	        Toast.makeText(getApplicationContext(), "GETTING LOCATION", Toast.LENGTH_LONG).show();*/
+			
 	        myUsername = usernameText.getText().toString();
 	    	myPassword = passwordText.getText().toString();
 	    	System.out.println("Username is '" + myUsername + "'");
@@ -106,6 +102,10 @@ public class SECEActivity extends Activity implements OnClickListener {
 	    	else{
 	    		System.out.println("Both username and password seem correct.");
 	    		credentialManager.storeCredentials(myUsername, myPassword);
+	    		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		        LocationListener locListener = new MyLocationListener();
+		        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);      
+		        Toast.makeText(getApplicationContext(), "GETTING LOCATION", Toast.LENGTH_LONG).show();
 	    		Intent proceedIntent = new Intent(this, MainActivity.class);
 	    		startActivity(proceedIntent);
 	    	}
