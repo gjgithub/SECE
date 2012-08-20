@@ -52,12 +52,4 @@ public class CredentialManager {
 		mySPEditor.commit();
 	}
 	
-	
-	/**
-	 * public String getCredentials(String enterUsername, String enterPassword){
-	 * 	if (enterUsername == this.username & enterPassword == this.password){........}
-	 * else{.......}
-	 * 
-	 * }
-	 */
 }

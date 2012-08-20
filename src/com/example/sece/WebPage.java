@@ -11,6 +11,6 @@ public class WebPage extends Activity {
         setContentView(R.layout.activity_webview);
         WebView myWebView = (WebView) findViewById(R.id.googleweb);
         myWebView.getSettings().setJavaScriptEnabled(true);
-     myWebView.loadUrl("http://www.google.com");
+     myWebView.loadUrl("http://sece.cs.columbia.edu/static/smob.json");
 	}
 }

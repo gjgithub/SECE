@@ -34,13 +34,18 @@ public class SECEActivity extends Activity implements OnClickListener {
     	passwordText = (EditText) findViewById(R.id.passwordText);
     	credentials = getSharedPreferences("creds.txt", 0);
     	credentialManager = new CredentialManager(getSharedPreferences("creds.txt",0));
+    	boolean credResult = credentialManager.areThereCredentials(credentials);
+    	if (credResult == true){
+    		Intent proceedIntent = new Intent(this, MainActivity.class);
+    		startActivity(proceedIntent);
+    	}
 	}
 
     public class MyLocationListener implements LocationListener {
     	public void onLocationChanged(Location loc)
     	{
-    		loc.getLatitude();
-    		loc.getLongitude();
+    		//loc.getLatitude();
+    		//loc.getLongitude();
     		String dispLat = "Latitude = " + loc.getLatitude();
     		String dispLong = "Longitude = "+ loc.getLongitude();
     		//TextView latitude = (TextView) findViewById(R.id.latitude) ;
@@ -102,11 +107,11 @@ public class SECEActivity extends Activity implements OnClickListener {
 	    	else{
 	    		System.out.println("Both username and password seem correct.");
 	    		credentialManager.storeCredentials(myUsername, myPassword);
-	    		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		        LocationListener locListener = new MyLocationListener();
-		        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);      
+	    		//LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		        //LocationListener locListener = new MyLocationListener();
+		        //locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);      
 		        Toast.makeText(getApplicationContext(), "GETTING LOCATION", Toast.LENGTH_LONG).show();
-	    		Intent proceedIntent = new Intent(this, MainActivity.class);
+		        Intent proceedIntent = new Intent(this, MainActivity.class);
 	    		startActivity(proceedIntent);
 	    	}
 		}

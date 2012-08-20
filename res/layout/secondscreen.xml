@@ -38,8 +38,16 @@ android:layout_width="fill_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/webpageDisplay"
-        android:layout_toRightOf="@+id/urlText"
+        android:layout_toRightOf="@+id/webButton"
         android:text="Search" />
+
+    <Button
+        android:id="@+id/readObjectNames"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/webButton"
+        android:layout_toLeftOf="@+id/webButton"
+        android:text="Names" />
 
 </RelativeLayout>
 </ScrollView>

@@ -1,13 +1,14 @@
 package com.example.sece;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,9 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,12 +26,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
-	public Button connectButton, webButton;
+	public Button connectButton, webButton, objectNamesButton;
 	public EditText urlText;
 	public TextView webpageDisplay;
-	public URL url;
-    
-	@Override
+	public WebpageDownload myWebpage;
+	public JSONParser myJSONParser;
+	public JSONObject jsonObject = null;
+	public final static String ARRAYNAME="", ID="id", NAME = "name", TYPE="type", URL = "url";
+	public final static String LOCATION = "location", LOCATION_LATITUDE="latitude", LOCATION_LONGITUDE = "longitude";
+    JSONArray jsonArray=null;
+    public HashMap<String, String> smartObject;
+    public Iterator iterator;
+    public String id, name, type, url;
+	double location_longitude, location_latitude;
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.secondscreen);
@@ -40,8 +47,14 @@ public class MainActivity extends Activity implements OnClickListener {
     	connectButton.setOnClickListener(this);
     	webButton = (Button) findViewById(R.id.webButton);
     	webButton.setOnClickListener(this);
+    	objectNamesButton = (Button) findViewById(R.id.readObjectNames);
+    	objectNamesButton.setOnClickListener(this);
     	urlText=(EditText) findViewById(R.id.urlText);
     	webpageDisplay = (TextView) findViewById(R.id.webpageDisplay);
+    	myWebpage = new WebpageDownload();
+    	myJSONParser = new JSONParser();
+    	smartObject = new HashMap<String, String>();
+
 	}
 
     @Override
@@ -68,13 +81,24 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		String stringUrl = null;
 		if (v == connectButton){
 			
-			String stringUrl = "http://"+urlText.getText().toString();
+			
+			try {stringUrl = "http://"+urlText.getText().toString();
+			
+			}
+			finally {stringUrl = "https://" + urlText.getText().toString();
+				
+			}
 			ConnectivityManager myConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         	NetworkInfo myNetworkInfo = myConnectivityManager.getActiveNetworkInfo();
         	if (myNetworkInfo!=null && myNetworkInfo.isConnected()){
-        		new WebpageDownload().execute(stringUrl);
+        		try {
+					webpageDisplay.setText(myWebpage.getUrlContent(stringUrl));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}        	
         	}
         	else{
         		webpageDisplay.setText("Are u connected?");
@@ -85,64 +109,35 @@ public class MainActivity extends Activity implements OnClickListener {
 			Intent webIntent = new Intent(this, WebPage.class);
 			startActivity(webIntent);
 		}
-	}
- 
-	private class WebpageDownload extends AsyncTask <String, Void, String>{
-
-		@Override
-		protected String doInBackground(String... url) {
+		else if (v == objectNamesButton){
+			jsonArray = myJSONParser.getMyJSONArray();
 			try {
-				return getUrlContent(url[0]);
-			} catch (IOException e) {
+				for (int i=0;i<jsonArray.length(); i++){
+					JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+					id = jsonObject2.getString(ID);
+					name = jsonObject2.getString(NAME);
+					type = jsonObject2.getString(TYPE);
+					url = jsonObject2.getString(URL);
+					
+					JSONObject location = jsonObject2.getJSONObject(LOCATION);
+					location_latitude = location.getDouble(LOCATION_LATITUDE);
+					location_longitude = location.getDouble(LOCATION_LONGITUDE);
+					
+					if (type.equals("sensor")){
+						new SECESensor(id, name, url, location_latitude, location_longitude);
+						System.out.println("Sensor created.");
+					}
+					else if (type.equals("actuator")){
+						new SECEActuator(id, name, url, location_latitude, location_longitude);
+					System.out.println("Actuator created.");
+					}
+				}
+			}
+			catch (JSONException e){
 				e.printStackTrace();
-				return "Unable to retrieve web page. URL may be invalid.";
 			}
-		}
-		protected void onPostExecute(String result) {
-	        webpageDisplay.setText(result);
-		}
-		public String inputToString(InputStream inputStream) throws IOException, UnsupportedEncodingException {
-			BufferedReader reader = null;
-			reader =  new BufferedReader(new InputStreamReader(inputStream));
-			String content = null;
-			int c;
-			do {
-				c = reader.read();
-				if (c!=-1){
-					content+= (char) c;
-				}
-			}
-			while(c !=-1);
-			return content;
-		}
-		
-		public String getUrlContent(String myUrl) throws IOException {
-			InputStream myInputStream = null;
-			try {
-				url = new URL(myUrl);
-				HttpURLConnection myConnection = (HttpURLConnection) url.openConnection();
-				myConnection.setReadTimeout(10000);
-				myConnection.setConnectTimeout(10000);
-				myConnection.setRequestMethod("GET");
-				myConnection.setDoInput(true);
-				myConnection.connect();
-				int ResponseCode = myConnection.getResponseCode();
-				Log.d("HTTP EXAMPLE", "The response is: " + ResponseCode);
-				myInputStream = myConnection.getInputStream();
-				String webpageString = inputToString(myInputStream);
-				return webpageString;
-			}
-			finally {
-				if (myInputStream !=null) {
-					myInputStream.close();
-				}
-		}
-		
-			
-		}
 
-	}
-
-	
+		}
+	} 
 }
 
