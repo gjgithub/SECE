@@ -11,17 +11,12 @@ import android.util.Log;
 
 public class JSONParser {
 	JSONArray jArray;
-	String jsonString = "https://sece.cs.columbia.edu/static/smob.json";
-	WebpageDownload myWebpage2 = new WebpageDownload();
-	public JSONArray getMyJSONArray(){
-	
+	public JSONArray getMyJSONArray(String jsonString){
 		try {
-            jArray = new JSONArray(myWebpage2.getUrlContent(jsonString));
+            jArray = new JSONArray(jsonString);
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
-        } catch (IOException e) {
-			e.printStackTrace();
-        }
+        } 
         return jArray;
 	
 	}

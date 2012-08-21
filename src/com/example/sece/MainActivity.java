@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public Button connectButton, webButton, objectNamesButton;
 	public EditText urlText;
 	public TextView webpageDisplay;
-	public WebpageDownload myWebpage;
+	public WebpageDownload myWebpage, myWebpage2;
 	public JSONParser myJSONParser;
 	public JSONObject jsonObject = null;
 	public final static String ARRAYNAME="", ID="id", NAME = "name", TYPE="type", URL = "url";
@@ -52,6 +52,7 @@ public class MainActivity extends Activity implements OnClickListener {
     	urlText=(EditText) findViewById(R.id.urlText);
     	webpageDisplay = (TextView) findViewById(R.id.webpageDisplay);
     	myWebpage = new WebpageDownload();
+    	myWebpage2 = new WebpageDownload();
     	myJSONParser = new JSONParser();
     	smartObject = new HashMap<String, String>();
 
@@ -110,7 +111,17 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(webIntent);
 		}
 		else if (v == objectNamesButton){
-			jsonArray = myJSONParser.getMyJSONArray();
+		try {
+			stringUrl = "http://"+urlText.getText().toString();		
+		} 
+		finally {
+			stringUrl = "https://" + urlText.getText().toString();
+		}
+			try {
+				jsonArray = myJSONParser.getMyJSONArray(myWebpage.getUrlContent(stringUrl));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			try {
 				for (int i=0;i<jsonArray.length(); i++){
 					JSONObject jsonObject2 = jsonArray.getJSONObject(i);
