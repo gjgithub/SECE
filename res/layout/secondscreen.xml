@@ -3,7 +3,8 @@
 android:layout_width="fill_parent"
  android:layout_height="fill_parent">
  
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -16,38 +17,47 @@ android:layout_width="fill_parent"
         android:layout_alignParentTop="true"
         android:ems="10"
         android:inputType="textNoSuggestions" />
-    <TextView
+    <!--
+         <TextView
         android:id="@+id/webpageDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/webButton"
-         />
+        android:layout_below="@+id/webButton" />
+    -->
 
     <Button
-        android:id="@+id/webButton"
+        android:id="@+id/backButtonMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/urlText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Web" />
+        android:text="Back" />
 
     <Button
         android:id="@+id/connectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/webpageDisplay"
-        android:layout_toRightOf="@+id/webButton"
+        android:layout_alignRight="@+id/urlText"
+        android:layout_below="@+id/urlText"
         android:text="Search" />
 
     <Button
         android:id="@+id/readObjectNames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/webButton"
-        android:layout_toLeftOf="@+id/webButton"
+        android:layout_below="@+id/urlText"
+        android:layout_toRightOf="@+id/urlText"
         android:text="Names" />
 
+    <Button
+        android:id="@+id/webButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/connectButton"
+        android:text="Web" />
+
+`
 </RelativeLayout>
+
 </ScrollView>

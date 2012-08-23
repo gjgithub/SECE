@@ -33,9 +33,10 @@ public class SECEActivity extends Activity implements OnClickListener {
     	usernameText = (EditText) findViewById(R.id.usernameText);
     	passwordText = (EditText) findViewById(R.id.passwordText);
     	credentials = getSharedPreferences("creds.txt", 0);
-    	credentialManager = new CredentialManager(getSharedPreferences("creds.txt",0));
+    	credentialManager = new CredentialManager(credentials);
     	boolean credResult = credentialManager.areThereCredentials(credentials);
     	if (credResult == true){
+    		System.out.println(credentials);
     		Intent proceedIntent = new Intent(this, MainActivity.class);
     		startActivity(proceedIntent);
     	}

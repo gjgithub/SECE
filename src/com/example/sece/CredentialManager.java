@@ -18,13 +18,15 @@ public class CredentialManager {
 	}
 	
 	public Boolean areThereCredentials(SharedPreferences sharedpreferences){
-		
-		String username = sharedpreferences.getString(SECEUsername, "");
-		String password = sharedpreferences.getString(SECEPassword, "");
-		if(!username.equals("") && !password.equals("")){
+		mySharedPreferences = sharedpreferences;
+		String username = mySharedPreferences.getString(SECEUsername, "");
+		String password = mySharedPreferences.getString(SECEPassword, "");
+		if (!username.equals("") && !password.equals("")){
 			return true;
 		}
-		else{return false;}
+		else {
+			return false;
+		}
 	
 		
 	}

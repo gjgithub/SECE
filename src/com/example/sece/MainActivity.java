@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,123 +33,188 @@ public class MainActivity extends Activity implements OnClickListener {
 	public WebpageDownload myWebpage, myWebpage2;
 	public JSONParser myJSONParser;
 	public JSONObject jsonObject = null;
-	public final static String ARRAYNAME="", ID="id", NAME = "name", TYPE="type", URL = "url";
-	public final static String LOCATION = "location", LOCATION_LATITUDE="latitude", LOCATION_LONGITUDE = "longitude";
-    JSONArray jsonArray=null;
-    public HashMap<String, String> smartObject;
-    public Iterator iterator;
-    public String id, name, type, url;
+	public final static String ARRAYNAME = "", ID = "id", NAME = "name",
+			TYPE = "type", URL = "url";
+	public final static String LOCATION = "location",
+			LOCATION_LATITUDE = "latitude", LOCATION_LONGITUDE = "longitude";
+	JSONArray jsonArray = null;
+	public HashMap<String, String> smartObject;
+	public Iterator iterator;
+	public String id, name, type, url;
 	double location_longitude, location_latitude;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.secondscreen);
-        connectButton = (Button) findViewById(R.id.connectButton);
-    	connectButton.setOnClickListener(this);
-    	webButton = (Button) findViewById(R.id.webButton);
-    	webButton.setOnClickListener(this);
-    	objectNamesButton = (Button) findViewById(R.id.readObjectNames);
-    	objectNamesButton.setOnClickListener(this);
-    	urlText=(EditText) findViewById(R.id.urlText);
-    	webpageDisplay = (TextView) findViewById(R.id.webpageDisplay);
-    	myWebpage = new WebpageDownload();
-    	myWebpage2 = new WebpageDownload();
-    	myJSONParser = new JSONParser();
-    	smartObject = new HashMap<String, String>();
+	public Button backButton;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.secondscreen);
+		connectButton = (Button) findViewById(R.id.connectButton);
+		connectButton.setOnClickListener(this);
+		webButton = (Button) findViewById(R.id.webButton);
+		webButton.setOnClickListener(this);
+		objectNamesButton = (Button) findViewById(R.id.readObjectNames);
+		objectNamesButton.setOnClickListener(this);
+		urlText = (EditText) findViewById(R.id.urlText);
+		//webpageDisplay = (TextView) findViewById(R.id.webpageDisplay);
+		myWebpage = new WebpageDownload();
+		myWebpage2 = new WebpageDownload();
+		myJSONParser = new JSONParser();
+		smartObject = new HashMap<String, String>();
+		/*
+		 * backButton = (Button) findViewById(R.id.backButtonMain);
+		 * backButton.setOnClickListener(this);
+		 */
 	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_sece, menu);
-        
-        
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_sece, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 		case R.id.reset:
-			SharedPreferences myReset = getSharedPreferences("creds.txt",0);
+			SharedPreferences myReset = getSharedPreferences("creds.txt", 0);
 			SharedPreferences.Editor myResetEditor = myReset.edit();
 			myResetEditor.clear().commit();
 			Intent resetIntent = new Intent(this, SECEActivity.class);
 			startActivity(resetIntent);
 		}
-    	
-    	return true;
-    
-    }
+
+		return true;
+
+	}
+
+	@Override
+	public void onBackPressed() {
+	}
 
 	@Override
 	public void onClick(View v) {
+		/**/
 		String stringUrl = null;
-		if (v == connectButton){
-			
-			
-			try {stringUrl = "http://"+urlText.getText().toString();
-			
-			}
-			finally {stringUrl = "https://" + urlText.getText().toString();
-				
+
+		if (v == connectButton) {
+
+			try {
+				stringUrl = "http://" + urlText.getText().toString();
+
+			} finally {
+				stringUrl = "https://" + urlText.getText().toString();
+
 			}
 			ConnectivityManager myConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        	NetworkInfo myNetworkInfo = myConnectivityManager.getActiveNetworkInfo();
-        	if (myNetworkInfo!=null && myNetworkInfo.isConnected()){
-        		try {
-					webpageDisplay.setText(myWebpage.getUrlContent(stringUrl));
+			NetworkInfo myNetworkInfo = myConnectivityManager
+					.getActiveNetworkInfo();
+			if (myNetworkInfo != null && myNetworkInfo.isConnected()) {
+				try {
+					String urlContent = myWebpage.getUrlContent(stringUrl);
 				} catch (IOException e) {
 					e.printStackTrace();
-				}        	
-        	}
-        	else{
-        		webpageDisplay.setText("Are u connected?");
-        	}
-        	
-		}
-		else if (v == webButton){
+				}
+			} else {
+				webpageDisplay.setText("Are u connected?");
+			}
+
+		} else if (v == webButton) {
 			Intent webIntent = new Intent(this, WebPage.class);
 			startActivity(webIntent);
-		}
-		else if (v == objectNamesButton){
-		try {
-			stringUrl = "http://"+urlText.getText().toString();		
-		} 
-		finally {
-			stringUrl = "https://" + urlText.getText().toString();
-		}
+		} else if (v == objectNamesButton) {
+
+			System.out.println("In try block..");
+			stringUrl = "http://" + urlText.getText().toString();
+
 			try {
-				jsonArray = myJSONParser.getMyJSONArray(myWebpage.getUrlContent(stringUrl));
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			try {
-				for (int i=0;i<jsonArray.length(); i++){
-					JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-					id = jsonObject2.getString(ID);
-					name = jsonObject2.getString(NAME);
-					type = jsonObject2.getString(TYPE);
-					url = jsonObject2.getString(URL);
-					
-					JSONObject location = jsonObject2.getJSONObject(LOCATION);
-					location_latitude = location.getDouble(LOCATION_LATITUDE);
-					location_longitude = location.getDouble(LOCATION_LONGITUDE);
-					
-					if (type.equals("sensor")){
-						new SECESensor(id, name, url, location_latitude, location_longitude);
-						System.out.println("Sensor created.");
-					}
-					else if (type.equals("actuator")){
-						new SECEActuator(id, name, url, location_latitude, location_longitude);
-					System.out.println("Actuator created.");
+				
+				String[] s = myWebpage.getUrlContentWithStatus(stringUrl);
+				
+				if (s[0].equalsIgnoreCase("302")) {
+					System.out.println("Client Error.. try HTTPS");
+					stringUrl = "https://" + urlText.getText().toString();
+					s = myWebpage.getUrlContentWithStatus(stringUrl);
+					if (s[0].equalsIgnoreCase("302")) {
+						System.out
+								.println("Client Error in HTTPS.. BOOM .. debug !");
+
 					}
 				}
-			}
-			catch (JSONException e){
-				e.printStackTrace();
+				
+				jsonArray = myJSONParser.getMyJSONArray(s[1]);
+
+				for (int i = 0; i < jsonArray.length(); i++) {
+					try {
+						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+						try {
+							id = jsonObject2.getString(ID);
+						} catch (Exception e) {
+							e.printStackTrace();
+							id = null;
+						}
+						try {
+							name = jsonObject2.getString(NAME);
+						} catch (Exception e) {
+							e.printStackTrace();
+							name = null;
+						}
+
+						try {
+							type = jsonObject2.getString(TYPE);
+							if (type.equals("actuator")) {
+								/*
+								 * SECELinkedList seceLinkedList = new
+								 * SECELinkedList();
+								 * seceLinkedList.addtoActuatorList(new
+								 * SECEActuator(id, name, url,
+								 * location_latitude, location_longitude));
+								 */
+								System.out.println("actuator");
+							} else if (type.equals("sensor")) {
+								/*
+								 * SECELinkedList seceLinkedList = new
+								 * SECELinkedList();
+								 * seceLinkedList.addtoSensorList(new
+								 * SECESensor(id, name, url, location_latitude,
+								 * location_longitude));
+								 */}
+						} catch (Exception e) {
+							e.printStackTrace();
+							type = null;
+						}
+						try {
+							url = jsonObject2.getString(URL);
+						} catch (Exception e) {
+							e.printStackTrace();
+							url = null;
+						}
+						try {
+							JSONObject location = jsonObject2
+									.getJSONObject(LOCATION);
+							location_latitude = location
+									.getDouble(LOCATION_LATITUDE);
+							location_longitude = location
+									.getDouble(LOCATION_LONGITUDE);
+						} catch (Exception e) {
+							e.printStackTrace();
+							location_latitude = 0;
+							location_longitude = 0;
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (IOException e1) {
+				System.out.println("Unable to connect to the server..");
+				e1.printStackTrace();
+				System.out.println("NOT A VALID JSON ARRAY");
 			}
 
 		}
-	} 
+		/*
+		 * if (v==backButton){ Intent backIntent = new Intent(this,
+		 * SECEActivity.class); startActivity(backIntent); }
+		 */
+	}
 }
-
