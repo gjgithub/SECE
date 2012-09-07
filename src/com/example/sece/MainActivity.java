@@ -1,17 +1,14 @@
 package com.example.sece;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -43,6 +42,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	public String id, name, type, url;
 	double location_longitude, location_latitude;
 	public Button backButton;
+	public SECEArrayList seceArrayList = new SECEArrayList();
+	public ListView mainListView;
+	public ArrayAdapter<String> listAdapter;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,15 +58,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		objectNamesButton = (Button) findViewById(R.id.readObjectNames);
 		objectNamesButton.setOnClickListener(this);
 		urlText = (EditText) findViewById(R.id.urlText);
-		//webpageDisplay = (TextView) findViewById(R.id.webpageDisplay);
 		myWebpage = new WebpageDownload();
 		myWebpage2 = new WebpageDownload();
 		myJSONParser = new JSONParser();
 		smartObject = new HashMap<String, String>();
-		/*
-		 * backButton = (Button) findViewById(R.id.backButtonMain);
-		 * backButton.setOnClickListener(this);
-		 */
+		backButton = (Button) findViewById(R.id.backButtonMain);
+		backButton.setOnClickListener(this);
+	 
 	}
 
 	@Override
@@ -83,7 +84,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			Intent resetIntent = new Intent(this, SECEActivity.class);
 			startActivity(resetIntent);
 		}
-
 		return true;
 
 	}
@@ -119,31 +119,25 @@ public class MainActivity extends Activity implements OnClickListener {
 				webpageDisplay.setText("Are u connected?");
 			}
 
-		} else if (v == webButton) {
+		} 
+		else if (v == webButton) {
 			Intent webIntent = new Intent(this, WebPage.class);
 			startActivity(webIntent);
-		} else if (v == objectNamesButton) {
-
-			System.out.println("In try block..");
+		} 
+		else if (v == objectNamesButton) {
 			stringUrl = "http://" + urlText.getText().toString();
-
 			try {
-				
 				String[] s = myWebpage.getUrlContentWithStatus(stringUrl);
-				
 				if (s[0].equalsIgnoreCase("302")) {
 					System.out.println("Client Error.. try HTTPS");
 					stringUrl = "https://" + urlText.getText().toString();
 					s = myWebpage.getUrlContentWithStatus(stringUrl);
 					if (s[0].equalsIgnoreCase("302")) {
-						System.out
-								.println("Client Error in HTTPS.. BOOM .. debug !");
-
+						System.out.println("Client Error in HTTPS.. BOOM .. debug !");
 					}
-				}
-				
+				}	
 				jsonArray = myJSONParser.getMyJSONArray(s[1]);
-
+				seceArrayList.removeFromList();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					try {
 						JSONObject jsonObject2 = jsonArray.getJSONObject(i);
@@ -160,29 +154,7 @@ public class MainActivity extends Activity implements OnClickListener {
 							name = null;
 						}
 
-						try {
-							type = jsonObject2.getString(TYPE);
-							if (type.equals("actuator")) {
-								/*
-								 * SECELinkedList seceLinkedList = new
-								 * SECELinkedList();
-								 * seceLinkedList.addtoActuatorList(new
-								 * SECEActuator(id, name, url,
-								 * location_latitude, location_longitude));
-								 */
-								System.out.println("actuator");
-							} else if (type.equals("sensor")) {
-								/*
-								 * SECELinkedList seceLinkedList = new
-								 * SECELinkedList();
-								 * seceLinkedList.addtoSensorList(new
-								 * SECESensor(id, name, url, location_latitude,
-								 * location_longitude));
-								 */}
-						} catch (Exception e) {
-							e.printStackTrace();
-							type = null;
-						}
+						
 						try {
 							url = jsonObject2.getString(URL);
 						} catch (Exception e) {
@@ -201,20 +173,37 @@ public class MainActivity extends Activity implements OnClickListener {
 							location_latitude = 0;
 							location_longitude = 0;
 						}
+						try {
+							type = jsonObject2.getString(TYPE);
+							if (type.equals("actuator")) {
+								 seceArrayList.addtoObjectList(new SECEActuator(id, name, type, url, location_latitude, location_longitude));
+								 
+							} 
+							else if (type.equals("sensor")) {
+								 seceArrayList.addtoObjectList(new SECESensor(id, name, type, url, location_latitude, location_longitude));
+							}
+						} 
+						catch (Exception e) {
+							e.printStackTrace();
+							type = null;
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
-			} catch (IOException e1) {
+				Intent listIntent = new Intent(this, ListViewActivity.class);
+				startActivity(listIntent);
+			} catch (IOException e) {
 				System.out.println("Unable to connect to the server..");
-				e1.printStackTrace();
-				System.out.println("NOT A VALID JSON ARRAY");
+				e.printStackTrace();
 			}
 
 		}
-		/*
-		 * if (v==backButton){ Intent backIntent = new Intent(this,
-		 * SECEActivity.class); startActivity(backIntent); }
-		 */
+		
+		 if (v==backButton){ 
+			   
+			 
+		 }
+		 
 	}
 }

@@ -22,8 +22,7 @@ public class WebpageDownload {
 		InputStream myInputStream = null;
 		try {
 			url = new URL(myUrl);
-			HttpURLConnection myConnection = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection myConnection = (HttpURLConnection) url.openConnection();
 			myConnection.setReadTimeout(10000);
 			myConnection.setConnectTimeout(10000);
 			myConnection.setRequestMethod("GET");
@@ -34,6 +33,7 @@ public class WebpageDownload {
 			System.out.println("Response code: " + responseCode);
 			myInputStream = myConnection.getInputStream();
 			String webpageString = inputStreamToString(myInputStream);
+			System.out.println("Web page Content: " + webpageString);
 			return webpageString;
 		} finally {
 			if (myInputStream != null) {

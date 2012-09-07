@@ -1,12 +1,8 @@
 package com.example.sece;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,37 +38,6 @@ public class SECEActivity extends Activity implements OnClickListener {
     	}
 	}
 
-    public class MyLocationListener implements LocationListener {
-    	public void onLocationChanged(Location loc)
-    	{
-    		//loc.getLatitude();
-    		//loc.getLongitude();
-    		String dispLat = "Latitude = " + loc.getLatitude();
-    		String dispLong = "Longitude = "+ loc.getLongitude();
-    		//TextView latitude = (TextView) findViewById(R.id.latitude) ;
-    		//TextView longitude = (TextView)findViewById(R.id.longitude);
-    		//latitude.setText(dispLat);
-    		//longitude.setText(dispLong);
-    	}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(), "GPS DISABLED", Toast.LENGTH_LONG).show();
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(), "GPS ENABLED", Toast.LENGTH_LONG).show();
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			// TODO Auto-generated method stub
-		}
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_sece, menu);
@@ -103,15 +68,11 @@ public class SECEActivity extends Activity implements OnClickListener {
 	    	System.out.println("Password is '" + myPassword + "'");
 	    	if (!credentialManager.noBlanks(myUsername, myPassword)){
 	    		System.out.println("Username or password is blank");
-	    		Toast.makeText(getApplicationContext(), "Enter credentials please.", Toast.LENGTH_LONG).show();		
+	    		Toast.makeText(getApplicationContext(), "Enter credentials please.", Toast.LENGTH_SHORT).show();		
 	    	}
 	    	else{
 	    		System.out.println("Both username and password seem correct.");
 	    		credentialManager.storeCredentials(myUsername, myPassword);
-	    		//LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		        //LocationListener locListener = new MyLocationListener();
-		        //locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);      
-		        Toast.makeText(getApplicationContext(), "GETTING LOCATION", Toast.LENGTH_LONG).show();
 		        Intent proceedIntent = new Intent(this, MainActivity.class);
 	    		startActivity(proceedIntent);
 	    	}
